@@ -1,0 +1,37 @@
+Demonstrate your application to deploy on S3 / SEBS using AWS CodePipeline
+		Step 1: Create and Configure the S3 Bucket 
+		1.	Navigate to the S3 service in the AWS Console. 
+		2.	Click Create bucket. 
+		3.	Give it a globally unique name (e.g., my-codepipeline-demo-siteuniquename). 
+			Uncheck "Block all public access". Acknowledge the warning. This is necessary to make your website public. 
+		1.	Click create bucket. 
+		2.	Go into your new bucket, click the Properties tab. 
+		1.	Scroll down to Static website hosting and click Edit. 
+		2.	Enable it, set the Index document to index.html, and save changes. 
+		3.	Go to the Permissions tab, click Edit under Bucket policy, and paste the following policy. Replace YOUR_BUCKET_NAME with your bucket's name. 
+		Step 2: Create the AWS CodePipeline 
+		1.	Navigate to the CodePipeline service in the AWS Console. 
+		2.	Click Create pipeline. 
+		Step 3: Pipeline settings: 
+		○	Pipeline name: My-S3-Website-Pipeline. 
+		○   Leave Service role as is; CodePipeline will create a new one for you. ○   Click Next. 
+		Step 4: Source stage: 
+		一	Source provider: Select GitHub (via GitHub App ). 
+		○ Click Create a connection. A new window will open. Name your connection (e.g., my-github-connection) and connect to your GitHub account. 
+		Step 4: Build stage: 
+		o	Build provider: Select AWS CodeBuild. 
+		○ Click Create project. A new window will appear. 
+		Environment image: Managed image. 
+		■ Operating system: Amazon Linux 2. 
+		■ Runtime(s): Standard. 
+		■ Image: aws/codebuild/amazonlinux2-x86_64standard:5.0. 
+		■ Buildspec: Check "Use a buildspec file". CodeBuild will automatically look for buildspec.yml in your repo's root
+		o	Click Continue 	to CodePipeline.
+		o	Click Next. 
+		Step 5: Deploy stage: 
+		Deploy provider: Select Amazon S3.
+		Region: Your current region.
+		Bucket: Select the S3 bucket you created earlier. 
+		○ Check the box for "Extract file before deploy". This unzips the build artifact and places the files directly in the bucket. 
+		Step 6: Review all the settings and click Create pipeline
+		The pipeline will automatically start its first run. You can watch it progress through the stages. Once it succeeds, go to your S3 bucket's static website URL (from Properties -> Static website hosting) to see your live page! 
